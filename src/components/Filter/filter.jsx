@@ -1,20 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import css from './filter.module.css';
+import { FilterInput, FilterLabel } from './Filter.styled';
 
 export default function Filter({ onChange, value }) {
   return (
-    <label className={css.filter__label}>
+    <FilterLabel>
       Find your contact
       <br />
-      <input
-        className={css.filter__input}
+      <FilterInput
         type="text"
         name="filter"
         value={value}
         onChange={onChange}
       />
-    </label>
+    </FilterLabel>
   );
 }
 
