@@ -2,19 +2,27 @@ import { Component } from 'react';
 import { nanoid } from 'nanoid';
 import { NewContactForm } from './Form/form';
 import Filter from './Filter/filter';
-import ContactList from './ContactList';
-import css from 'app.module.css';
+import ContactList from '../components/ContactList/ContactList';
+import { AppContainer, AppTitleFirst, AppTitleSecond } from './app.styled';
 
 export class App extends Component {
   state = {
-    contacts: [
-      { id: 'id-1', name: 'Rosie Simpson', number: '459-12-56' },
-      { id: 'id-2', name: 'Hermione Kline', number: '443-89-12' },
-      { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
-      { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
-    ],
+    contacts: [],
     filter: '',
   };
+
+  componentDidMount() {
+    const savedContacts = localStorage.getItem('contacts');
+    if (savedContacts !== null) {
+      this.setState({ contacts: JSON.parse(savedContacts) });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   addNewUser = ({ name, number }) => {
     const user = {
@@ -59,12 +67,12 @@ export class App extends Component {
   render() {
     return (
       <div>
-        <div className={css.container}>
-          <h1 className={css.title}>Phonebook</h1>
+        <AppContainer>
+          <AppTitleFirst>Phonebook</AppTitleFirst>
           <NewContactForm onSubmit={this.addNewUser} />
-        </div>
-        <div className={css.container}>
-          <h2 className={css.title}>Contacts</h2>
+        </AppContainer>
+        <AppContainer>
+          <AppTitleSecond>Contacts</AppTitleSecond>
           <Filter
             onChange={this.onFilterInputChange}
             value={this.state.filter}
@@ -73,7 +81,7 @@ export class App extends Component {
             filteredUserList={this.getFilteredContacts()}
             onDeleteUser={this.handleDeleteUser}
           />
-        </div>
+        </AppContainer>
       </div>
     );
   }
